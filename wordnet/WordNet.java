@@ -110,5 +110,6 @@ public class WordNet {
         }
 
         System.out.println("total num of nouns = " + counter);
+        System.out.println("total num of nouns = " + counter);
     }
 }
