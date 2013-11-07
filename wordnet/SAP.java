@@ -33,7 +33,7 @@ public class SAP {
         return dMap;
     }
 
-    public Integer[] findAncestor(int v, int w) {
+    private Integer[] findAncestor(int v, int w) {
         Integer [] ad = new Integer[2];
 
         // dMap has distance as the key and the list of vectors at that distance as the values
@@ -62,7 +62,7 @@ public class SAP {
         return ad;
     }
 
-    public Integer[] findShortestAncestorInSets(Iterable<Integer> v, Iterable<Integer> w) {
+    private Integer[] findShortestAncestorInSets(Iterable<Integer> v, Iterable<Integer> w) {
         Integer [] shortestPath = new Integer[2];
         shortestPath[0] = 0;
         shortestPath[1] = 0;
@@ -90,13 +90,15 @@ public class SAP {
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
-        System.out.println("computing length");
+        //System.out.println("computing length");
+        if(v == w) return 0;
         return findAncestor(v, w)[1];
     }
 
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
-        System.out.println("computing ancestor");
+        //System.out.println("computing ancestor");
+        if(v == w) return v;
         return findAncestor(v, w)[0];
     }
 

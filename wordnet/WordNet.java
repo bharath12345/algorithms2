@@ -55,8 +55,8 @@ public class WordNet {
         synsetsIn.close();
 
         G = new Digraph(synsetIdMap.size());
-        System.out.println("# of vertices on the graph, synsetMap = " + synsetNounMap.size());
-        System.out.println("# of vertices on the graph, synsetIdMap = " + synsetIdMap.size());
+        //System.out.println("# of vertices on the graph, synsetMap = " + synsetNounMap.size());
+        //System.out.println("# of vertices on the graph, synsetIdMap = " + synsetIdMap.size());
 
         In hypernymsIns = new In(hypernyms);
         String hypernymsLine;
@@ -85,7 +85,7 @@ public class WordNet {
             wordTree.put(synsetId, hypernymsArray);
         }
         hypernymsIns.close();
-        System.out.println("number of edges added = " + counter);
+        //System.out.println("number of edges added = " + counter);
 
         sap = new SAP(G);
     }
@@ -126,7 +126,7 @@ public class WordNet {
         return synsetIdMap.get(ancestorId);
     }
 
-    public class MyIterator implements Iterable<String>, Iterator<String> {
+    private class MyIterator implements Iterable<String>, Iterator<String> {
 
         String[] nounArray = synsetNounMap.keySet().toArray(new String[0]);
         int position = 0;
