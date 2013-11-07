@@ -10,7 +10,7 @@ import stdlib.StdOut;
  */
 public class Outcast {
 
-    private WordNet wordnet;
+    private final WordNet wordnet;
 
     // constructor takes a WordNet object
     public Outcast(WordNet wordnet) {

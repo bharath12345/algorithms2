@@ -14,13 +14,13 @@ import java.util.*;
  */
 public class WordNet {
 
-    private Map<Integer, Integer[]> wordTree = new HashMap<Integer, Integer[]>();
+    private final Map<Integer, Integer[]> wordTree = new HashMap<Integer, Integer[]>();
 
-    public Map<String, Set<Integer>> synsetNounMap = new HashMap<String, Set<Integer>>(); // synset induvidual nouns to its id
-    public Map<Integer, String> synsetIdMap = new HashMap<Integer, String>(); // synset id to single synset string of all nouns
+    private final Map<String, Set<Integer>> synsetNounMap = new HashMap<String, Set<Integer>>(); // synset induvidual nouns to its id
+    private final Map<Integer, String> synsetIdMap = new HashMap<Integer, String>(); // synset id to single synset string of all nouns
 
-    private Digraph G;
-    private SAP sap;
+    private final Digraph G;
+    private final SAP sap;
 
     // A single synset like 'miracle' can have multiple IDs. 'miracle' has 54682 and 54683 (and maybe more!)
 

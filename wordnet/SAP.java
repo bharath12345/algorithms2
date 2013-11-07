@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class SAP {
 
-    private Digraph G;
+    private final Digraph G;
 
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
