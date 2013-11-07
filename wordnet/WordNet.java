@@ -1,5 +1,6 @@
 package wordnet;
 
+import algs4.Digraph;
 import stdlib.In;
 
 import java.util.HashMap;
@@ -15,8 +16,12 @@ public class WordNet {
 
     private Map<Integer, Integer []> wordTree = new HashMap<Integer, Integer []>();
 
-    private Map<String, Integer> synsetNounMap = new HashMap<String, Integer>();
-    private Map<Integer, String[]> synsetIdMap = new HashMap<Integer, String[]>();
+    private Map<String, Integer> synsetMap = new HashMap<String, Integer>(); // synset string (all nouns) to its id
+    private Map<String, Integer> synsetNounMap = new HashMap<String, Integer>(); // synset induvidual nouns to its id
+    private Map<Integer, String> synsetIdMap = new HashMap<Integer, String>(); // synset id to single synset string of all nouns
+
+    private Digraph G;
+    private SAP sap;
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms) throws java.lang.IllegalArgumentException {
@@ -27,12 +32,16 @@ public class WordNet {
             String [] synsetLineParts = synsetsLine.split(",");
             Integer synsetId = Integer.parseInt(synsetLineParts[0]);
             String [] nouns = synsetLineParts[1].split(" ");
+
+            synsetMap.put(synsetLineParts[1], synsetId);
+            synsetIdMap.put(synsetId, synsetLineParts[1]);
             for(String noun: nouns) {
                 synsetNounMap.put(noun, synsetId);
             }
-            synsetIdMap.put(synsetId, nouns);
         }
         synsetsIn.close();
+
+        G = new Digraph(synsetMap.size());
 
         In hypernymsIns = new In(hypernyms);
         String hypernymsLine;
@@ -44,10 +53,13 @@ public class WordNet {
             Integer [] hypernymsArray = new Integer[hypernymsParts.length - 1];
             for(int i=1; i<hypernymsParts.length-1; i++) {
                 hypernymsArray[i-1] = Integer.parseInt(hypernymsParts[i]);
+                G.addEdge(synsetId, hypernymsArray[i-1]);
             }
             wordTree.put(synsetId, hypernymsArray);
         }
         hypernymsIns.close();
+
+        sap = new SAP(G);
     }
 
     // the set of nouns (no duplicates), returned as an Iterable
@@ -61,19 +73,34 @@ public class WordNet {
     }
 
     // distance between nounA and nounB (defined below)
-    public int distance(String nounA, String nounB) throws java.lang.IllegalArgumentException {
-        return 0;
+    public int distance(String nounA, String nounB) {
+        if(isNoun(nounA) == false || isNoun(nounB) == false) {
+            throw new IllegalArgumentException("one of the nouns not part of wordnet = [" + nounA + ", " + nounB + "]");
+        }
+
+        int nounAsynsetId = synsetNounMap.get(nounA);
+        int nounBsynsetId = synsetNounMap.get(nounB);
+
+        return sap.length(nounAsynsetId, nounBsynsetId);
     }
 
     // a synset (second field of synsets.txt) that is the common ancestor of nounA and nounB
     // in a shortest ancestral path (defined below)
-    public String sap(String nounA, String nounB) throws java.lang.IllegalArgumentException {
-        return null;
+    public String sap(String nounA, String nounB) {
+        if(isNoun(nounA) == false || isNoun(nounB) == false) {
+            throw new IllegalArgumentException("one of the nouns not part of wordnet = [" + nounA + ", " + nounB + "]");
+        }
+
+        int nounAsynsetId = synsetNounMap.get(nounA);
+        int nounBsynsetId = synsetNounMap.get(nounB);
+
+        int ancestorId = sap.ancestor(nounAsynsetId, nounBsynsetId);
+        return synsetIdMap.get(ancestorId);
     }
 
     public class MyIterator implements Iterable<String>, Iterator<String> {
 
-        String[] nounArray = synsetNounMap.keySet().toArray(new String[0]);
+        String[] nounArray = synsetMap.keySet().toArray(new String[0]);
         int position = 0;
 
         @Override

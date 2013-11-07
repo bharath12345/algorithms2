@@ -62,6 +62,32 @@ public class SAP {
         return ad;
     }
 
+    public Integer[] findShortestAncestorInSets(Iterable<Integer> v, Iterable<Integer> w) {
+        Integer [] shortestPath = new Integer[2];
+        shortestPath[0] = 0;
+        shortestPath[1] = 0;
+
+        for(Integer vi : v) {
+            for(Integer wi: w) {
+                Integer [] path = findAncestor(vi, wi);
+
+                if(path[1] == -1) // no path found
+                    continue;
+                else if(shortestPath[1] == 0)  // first path found, assign it
+                    shortestPath = path;
+                else if(path[1] < shortestPath[1]) // more optimum path between a tuple, replace shortest
+                    shortestPath = path;
+            }
+        }
+
+        if(shortestPath[1] == 0) {
+            shortestPath[0] = -1;
+            shortestPath[1] = -1;
+            return shortestPath;
+        }
+        return shortestPath;
+    }
+
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
         System.out.println("computing length");
@@ -76,12 +102,12 @@ public class SAP {
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        return -1;
+        return findShortestAncestorInSets(v, w)[1];
     }
 
     // a common ancestor that participates in shortest ancestral path; -1 if no such path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        return 0;
+        return findShortestAncestorInSets(v, w)[0];
     }
 
     // for unit testing of this class (such as the one below)
